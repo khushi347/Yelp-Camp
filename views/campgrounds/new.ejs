@@ -1,0 +1,185 @@
+<% layout('layouts/boilerplate') %>
+<% 
+    stylesheet = 'newCampground.css';
+    newMap = true;  // This tells boilerplate to load newCampground.js
+%>
+
+<!-- Hero -->
+<div class="new-campground-hero">
+    <div class="container text-center">
+        <h1><i class="fas fa-plus-circle me-2"></i>Create New Campground</h1>
+        <p class="lead">Share your favorite camping spot with the community</p>
+    </div>
+</div>
+
+<div class="container mt-5 mb-5">
+    <div class="form-card">
+        <div class="form-header">
+            <h2><i class="fas fa-info-circle me-2"></i>Campground Information</h2>
+            <p class="text-muted">Fill in all the details below to create your campground listing</p>
+        </div>
+
+        <div class="form-body">
+            <form id="campgroundForm" 
+                  action="/campgrounds" 
+                  method="POST" 
+                  enctype="multipart/form-data" 
+                  novalidate>
+
+                <!-- BASIC INFO -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-tag me-2"></i>Basic Details
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Campground Title</label>
+                        <input class="form-control form-control-lg" 
+                               type="text" 
+                               name="campground[title]" 
+                               placeholder="e.g., Mountain View Campground"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Location Name</label>
+                        <input id="location" 
+                               class="form-control form-control-lg" 
+                               type="text" 
+                               name="campground[location]" 
+                               placeholder="e.g., Yosemite National Park, CA"
+                               required>
+                    </div>
+                </div>
+
+                <!-- MAP SECTION -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-map-marked-alt me-2"></i>Set Location on Map
+                    </h5>
+                    
+                    <!-- Map container - make sure this ID matches what newCampground.js expects -->
+                    <div id="map" style="height: 400px; width: 100%; border-radius: 12px; border: 2px solid #dee2e6; margin-bottom: 20px;"></div>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Longitude</label>
+                            <input id="longitude"
+                                   type="number"
+                                   step="any"
+                                   class="form-control"
+                                   name="campground[longitude]"
+                                   placeholder="-122.4194"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Latitude</label>
+                            <input id="latitude"
+                                   type="number"
+                                   step="any"
+                                   class="form-control"
+                                   name="campground[latitude]"
+                                   placeholder="37.7749"
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="map-instructions mt-3 p-3 bg-light rounded-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1 text-success"></i>
+                            Click on the map to place a marker. Drag to adjust location.
+                        </small>
+                    </div>
+                </div>
+
+                <!-- PRICE & DESCRIPTION -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-dollar-sign me-2"></i>Pricing & Description
+                    </h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Price per Night</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-success text-white">$</span>
+                            <input type="number" 
+                                   class="form-control" 
+                                   name="campground[price]" 
+                                   placeholder="35.00"
+                                   min="0" 
+                                   step="0.01" 
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Description</label>
+                        <textarea class="form-control" 
+                                  name="campground[description]" 
+                                  rows="5" 
+                                  placeholder="Describe your campground, amenities, nearby attractions, activities..."
+                                  required></textarea>
+                    </div>
+                </div>
+
+                <!-- IMAGES -->
+                <div class="form-section">
+                    <h5 class="section-title">
+                        <i class="fas fa-images me-2"></i>Campground Photos
+                    </h5>
+                    
+                    <div class="file-upload-area p-4 border border-2 border-dashed rounded-3 text-center bg-light">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i>
+                        <p class="mb-2">Drag & drop images here or click to browse</p>
+                        <input id="imageUpload"
+                               type="file"
+                               class="form-control d-none"
+                               name="images"
+                               multiple
+                               accept="image/*">
+                        <button type="button" 
+                                class="btn btn-outline-success mb-2"
+                                onclick="document.getElementById('imageUpload').click()">
+                            <i class="fas fa-folder-open me-2"></i>Choose Files
+                        </button>
+                        <small id="fileCount" class="text-muted d-block">No files selected</small>
+                    </div>
+                </div>
+
+                <!-- FORM ACTIONS -->
+                <div class="d-flex gap-3 mt-4">
+                    <button type="submit" class="btn btn-success btn-lg flex-grow-1">
+                        <i class="fas fa-campground me-2"></i>Create Campground
+                    </button>
+                    <a href="/campgrounds" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- File upload helper script -->
+<script>
+    (function() {
+        const fileInput = document.getElementById('imageUpload');
+        const fileCount = document.getElementById('fileCount');
+        
+        if (fileInput && fileCount) {
+            fileInput.addEventListener('change', function() {
+                if (this.files.length === 0) {
+                    fileCount.textContent = 'No files selected';
+                } else if (this.files.length === 1) {
+                    fileCount.textContent = this.files[0].name;
+                } else {
+                    fileCount.textContent = `${this.files.length} files selected`;
+                }
+            });
+        }
+    })();
+</script>
+
+<!-- IMPORTANT: You need this line for the map to render! -->
+<script src="/javascripts/newCampground.js"></script>

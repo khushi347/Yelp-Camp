@@ -1,0 +1,59 @@
+<!-- views/partials/map-section.ejs -->
+<% if (campground.geometry?.coordinates) { %>
+<div class="map-section">
+    <h3 class="section-title">
+        <i class="fas fa-map-marked-alt"></i>
+        Location
+    </h3>
+    
+    <!-- Map container with data attributes -->
+    <div id="map"
+         data-lat="<%= campground.geometry.coordinates[1] %>"
+         data-lng="<%= campground.geometry.coordinates[0] %>"
+         data-title="<%= campground.title.replace(/"/g, '&quot;') %>"
+         data-location="<%= campground.location.replace(/"/g, '&quot;') %>"
+         data-price="<%= campground.price %>"
+         style="height: 350px; width: 100%; border-radius: 12px; border: 2px solid #dee2e6; margin-bottom: 20px;">
+    </div>
+    
+    <div class="map-info bg-light p-3 rounded-3">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="fw-bold mb-1"><i class="fas fa-map-pin text-success me-2"></i>Coordinates</h6>
+                <code class="text-success">
+                    <%= campground.geometry.coordinates[1].toFixed(6) %>, 
+                    <%= campground.geometry.coordinates[0].toFixed(6) %>
+                </code>
+            </div>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=<%= campground.geometry.coordinates[1] %>,<%= campground.geometry.coordinates[0] %>" 
+               target="_blank" 
+               class="btn btn-outline-success btn-sm">
+                <i class="fas fa-directions me-1"></i> Directions
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Load the map script -->
+<script src="/javascripts/showMap.js"></script>
+
+<% } else { %>
+<div class="map-section">
+    <h3 class="section-title">
+        <i class="fas fa-map-marked-alt"></i>
+        Location
+    </h3>
+    <div class="empty-state text-center py-5 bg-light rounded-4 border border-2 border-dashed">
+        <div class="empty-icon mb-3">
+            <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #adb5bd;"></i>
+        </div>
+        <h5 class="empty-title text-secondary mb-2">No Location Data Available</h5>
+        <p class="text-muted mb-4">This campground hasn't been added to the map yet.</p>
+        <% if (currentUser && campground.author?.equals(currentUser._id)) { %>
+            <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-success px-4 py-2">
+                <i class="fas fa-plus-circle me-2"></i> Add Location
+            </a>
+        <% } %>
+    </div>
+</div>
+<% } %> 

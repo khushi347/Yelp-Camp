@@ -1,0 +1,42 @@
+<% layout('layouts/boilerplate') %>
+<% 
+    stylesheet = 'showCampground.css';
+    showMap = true;  // Loads showMap.js
+%>
+<!-- Hero Section -->
+<div class="campground-hero">
+    <!-- ... hero content ... -->
+</div>
+
+<div class="container pb-5">
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Carousel -->
+            <%- include('../partials/carousel') %>
+            
+            <!-- Meta Grid -->
+            <%- include('../partials/meta-grid') %>
+            
+            <!-- Description -->
+            <div class="campground-description">
+                <!-- ... description ... -->
+            </div>
+            
+            <!-- Action Buttons -->
+            <%- include('../partials/action-buttons') %>
+            
+            <!-- Review Form -->
+            <%- include('../partials/review-form') %>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Map Section - This loads showMap.js -->
+            <%- include('../partials/map-section') %>
+            
+            <!-- Reviews Section -->
+            <%- include('../partials/review-section') %>
+        </div>
+    </div>
+</div>

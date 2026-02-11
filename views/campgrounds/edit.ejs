@@ -1,0 +1,119 @@
+<% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/stylesheets/editCampground.css">
+
+
+<div class="edit-campground-page">
+
+<div class="page-header">
+  <div class="container">
+    <h1><i class="fas fa-edit"></i> Edit Campground</h1>
+    <p>Update your campground details, location, and photos</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="edit-form-container">
+    <!-- Form -->
+    <div class="form-card">
+      <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+          <label class="form-label">Campground Title</label>
+          <input class="form-control" type="text" name="campground[title]" value="<%= campground.title %>" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Location</label>
+          <input class="form-control" id="location" type="text" name="campground[location]" value="<%= campground.location %>" required>
+        </div>
+
+        <div class="coordinates-box">
+          <h4><i class="fas fa-map-marker-alt"></i> Set Coordinates</h4>
+          <p class="text-muted small mb-3">Click on the map to set coordinates</p>
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label small">Latitude</label>
+              <input id="latitude" type="number" step="any" class="form-control" 
+                     name="campground[latitude]" 
+                     value="<%= campground.geometry ? campground.geometry.coordinates[1] : '' %>" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small">Longitude</label>
+              <input id="longitude" type="number" step="any" class="form-control" 
+                     name="campground[longitude]" 
+                     value="<%= campground.geometry ? campground.geometry.coordinates[0] : '' %>" required>
+            </div>
+          </div>
+          <% if (campground.geometry?.coordinates) { %>
+            <div class="coordinates-display small">
+              Current: <%= campground.geometry.coordinates[1].toFixed(6) %>, <%= campground.geometry.coordinates[0].toFixed(6) %>
+            </div>
+          <% } %>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Price <span class="text-muted">(per night)</span></label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input type="number" class="form-control" name="campground[price]" value="<%= campground.price %>" min="0" step="0.01" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" rows="5" name="campground[description]" required><%= campground.description %></textarea>
+        </div>
+
+        <% if (campground.images?.length) { %>
+          <div class="form-group">
+            <label class="form-label">Existing Images <span class="text-muted">(check to delete)</span></label>
+            <div class="image-thumbnails">
+              <% campground.images.forEach((img, i) => { %>
+                <div class="image-thumbnail-container">
+                  <img src="<%= img.url %>" class="image-thumbnail">
+                  <input class="delete-checkbox" type="checkbox" name="deleteImages[]" value="<%= img.filename %>">
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="form-group">
+          <label class="form-label">Add More Images</label>
+          <input class="form-control" type="file" name="images" multiple accept="image/*">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Update</button>
+          <a href="/campgrounds/<%= campground._id %>" class="btn btn-outline"><i class="fas fa-times me-2"></i>Cancel</a>
+          <a href="/campgrounds/<%= campground._id %>/delete" class="btn btn-danger" onclick="return confirm('Delete this campground?')"><i class="fas fa-trash me-2"></i>Delete</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Map -->
+    <div class="map-card">
+      <div class="map-instructions">
+        <i class="fas fa-map-marked-alt"></i> Click on the map to set location
+      </div>
+      <div id="map"></div>
+      <div class="mt-4 small text-muted">
+        <i class="fas fa-lightbulb me-2"></i>Drag marker to adjust location
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  
+</div>
+
+
+
+<script>
+  window.CAMPGROUND_LAT = <%= campground.geometry ? campground.geometry.coordinates[1] : 39.8283 %>;
+  window.CAMPGROUND_LNG = <%= campground.geometry ? campground.geometry.coordinates[0] : -98.5795 %>;
+  window.CAMPGROUND_ZOOM = <%= campground.geometry ? 10 : 4 %>;
+  window.HAS_GEOMETRY = <%= campground.geometry ? 'true' : 'false' %>;
+</script>
+
+<script src="/javascripts/editMap.js"></script>

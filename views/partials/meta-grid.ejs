@@ -1,0 +1,27 @@
+<div class="meta-card">
+    <div class="meta-icon">
+        <i class="fas fa-user-circle"></i>
+    </div>
+    <div class="meta-label">Posted By</div>
+    <div class="meta-value">
+        <%= campground.author ? campground.author.username : 'Anonymous' %>
+    </div>
+</div>
+
+<div class="meta-card">
+    <div class="meta-icon">
+        <i class="fas fa-calendar-alt"></i>
+    </div>
+    <div class="meta-label">Created</div>
+    <div class="meta-value">
+        <% if (campground.createdAt) { %>
+            <%= new Date(campground.createdAt).toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            }) %>
+        <% } else { %>
+            Recently
+        <% } %>
+    </div>
+</div>

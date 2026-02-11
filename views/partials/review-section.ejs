@@ -1,0 +1,69 @@
+<div class="reviews-section">
+    <div class="reviews-header">
+        <h3 class="section-title mb-0">
+            <i class="fas fa-comments"></i>
+            Reviews
+        </h3>
+        <span class="reviews-count">
+            <%= campground.reviews.length %>
+        </span>
+    </div>
+    
+    <% if (campground.reviews.length === 0) { %>
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-comment-slash"></i>
+            </div>
+            <h5 class="empty-title">No Reviews Yet</h5>
+            <p class="text-muted">Be the first to share your experience!</p>
+        </div>
+    <% } else { %>
+        <div class="reviews-list">
+            <% campground.reviews.forEach(review => { %>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <div class="author-avatar">
+                                <%= review.author.username.charAt(0).toUpperCase() %>
+                            </div>
+                            <div class="author-info">
+                                <h6><%= review.author.username %></h6>
+                                <div class="review-rating">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <i class="fas fa-star<%= i <= review.rating ? '' : '-empty' %>"></i>
+                                    <% } %>
+                                    <span class="ms-2 text-muted"><%= review.rating %>/5</span>
+                                </div>
+                                <div class="review-date">
+                                    <% if (review.createdAt) { %>
+                                        <%= new Date(review.createdAt).toLocaleDateString('en-US', { 
+                                            month: 'short', 
+                                            day: 'numeric',
+                                            year: 'numeric'
+                                        }) %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <% if (currentUser && review.author.equals(currentUser._id)) { %>
+                            <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE" 
+                                  method="POST" 
+                                  class="delete-form">
+                                <button type="submit" 
+                                        class="btn-delete-review" 
+                                        onclick="return confirm('Are you sure you want to delete this review?')">
+                                    <i class="fas fa-trash-alt me-1"></i> Delete
+                                </button>
+                            </form>
+                        <% } %>
+                    </div>
+                    
+                    <div class="review-body">
+                        <%= review.body %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>  

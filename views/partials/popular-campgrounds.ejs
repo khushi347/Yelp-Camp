@@ -1,0 +1,63 @@
+
+<section class="campgrounds" id="campgrounds">
+    <div class="container">
+        <div class="section-title">
+            <h2>Popular Campgrounds</h2>
+            <p>Check out some of our most highly-rated campgrounds across the country.</p>
+        </div>
+        
+        <div class="campgrounds-grid">
+            <% if (typeof campgrounds !== 'undefined' && campgrounds.length > 0) { %>
+                <% campgrounds.slice(0, 3).forEach(campground => { %>
+                    <div class="campground-card">
+                        <img
+  src="<%= campground.images?.[0]?.url || 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80' %>"
+  alt="<%= campground.title %>"
+  class="campground-img"
+  onerror="this.src='https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80'"
+>
+
+                        <div class="campground-info">
+                            <h3><%= campground.title %></h3>
+                            <p><%= campground.description.substring(0, 100) %>...</p>
+                            <div class="campground-meta">
+                                <div class="price">$<%= campground.price %>/night</div>
+                                <div class="rating">
+                                    <% for(let i = 1; i <= 5; i++) { %>
+                                        <% if(i <= Math.round(campground.avgRating || 0)) { %>
+                                            <i class="fas fa-star"></i>
+                                        <% } else { %>
+                                            <i class="far fa-star"></i>
+                                        <% } %>
+                                    <% } %>
+                                    <span>(<%= campground.reviews ? campground.reviews.length : 0 %> reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <!-- Static fallback campgrounds -->
+                <div class="campground-card">
+                    <img src="https://images.unsplash.com/photo-1533575770077-052fa2c609fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mountain View Campground" class="campground-img">
+                    <div class="campground-info">
+                        <h3>Mountain View Campground</h3>
+                        <p>Stunning mountain views with hiking trails and fishing spots nearby.</p>
+                        <div class="campground-meta">
+                            <div class="price">$35/night</div>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                <span>4.5 (128 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Add more static campgrounds as needed -->
+            <% } %>
+        </div>
+        
+        <div class="view-all">
+            <a href="/campgrounds" class="btn btn-primary">View All Campgrounds</a>
+        </div>
+    </div>
+</section>

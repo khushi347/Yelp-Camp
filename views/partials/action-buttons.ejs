@@ -1,0 +1,19 @@
+<% if (currentUser && campground.author.equals(currentUser._id)) { %>
+  <div class="d-flex gap-2 mb-4">
+    <a 
+      href="/campgrounds/<%= campground._id %>/edit"n
+      class="btn btn-success"
+    >
+      Edit
+    </a>
+
+    <form 
+      action="/campgrounds/<%= campground._id %>?_method=DELETE"
+      method="POST"
+    >
+      <button class="btn btn-danger">
+        Delete
+      </button>
+    </form>
+  </div>
+<% } %>

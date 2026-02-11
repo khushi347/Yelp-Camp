@@ -1,0 +1,11 @@
+<section class="hero">
+    <div class="container">
+        <h1>Find Your Perfect Campground</h1>
+        <p>Discover and book amazing campgrounds, RV parks, and cabins across the country. Read reviews from fellow campers and share your own experiences.</p>
+        
+        <form action="/campgrounds" method="GET" class="search-box">
+            <input type="text" name="search" placeholder="Search by location, campground name, or activity..." value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>">
+            <button type="submit"><i class="fas fa-search"></i> Search</button>
+        </form>
+    </div>
+</section>

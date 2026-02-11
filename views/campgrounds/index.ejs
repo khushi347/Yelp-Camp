@@ -1,0 +1,111 @@
+<% layout('layouts/boilerplate') %>
+<% 
+    stylesheet = 'campgrounds.css';
+    clusterMap = true;  // Loads clusterMap.js
+    fullWidth = true;   // Removes container class for full-width map
+%>
+
+<%
+  const totalCampgrounds = campgrounds.length;
+  const fallbackImage =
+    'https://images.unsplash.com/photo-1537905569824-f89f14cceb68?auto=format&fit=crop&w=800&q=80';
+%>
+
+<!-- Hero -->
+<div class="campgrounds-hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h1><i class="fas fa-campground me-3"></i>Discover Amazing Campgrounds</h1>
+        <p>Explore thousands of campgrounds and plan your next adventure.</p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+        <a href="/campgrounds/new" class="btn btn-light btn-lg">
+          <i class="fas fa-plus-circle me-2"></i>Add New Campground
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container pb-5">
+
+  <!-- Stats -->
+  <div class="stats-section">
+    <div class="row text-center">
+      <div class="col-md-3 col-6">
+        <div class="stat-number"><%= totalCampgrounds %></div>
+        <div class="stat-label">Campgrounds</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-number"><%= geoCount %></div>
+        <div class="stat-label">On Map</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-number">$<%= avgPrice %></div>
+        <div class="stat-label">Avg. Price</div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-number"><%= reviewCount %></div>
+        <div class="stat-label">Reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="map-container">
+    <h2 class="map-title">
+      <i class="fas fa-map-marked-alt me-2"></i>Campground Locations
+    </h2>
+    <div id="clusterMap"></div>
+    <small class="text-muted d-block text-center mt-3">
+      <%= geoCount %> campgrounds visible on map
+    </small>
+  </div>
+
+  <!-- Cards -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <% campgrounds.forEach(campground => { %>
+      <div class="col">
+        <div class="campground-card">
+          <div class="card-img-container">
+            <img
+              src="<%= campground.images?.[0]?.url || fallbackImage %>"
+              onerror="this.src='<%= fallbackImage %>'"
+            />
+            <% if (campground.geometry) { %>
+              <span class="campground-badge">On Map</span>
+            <% } %>
+          </div>
+
+          <div class="card-body">
+            <h3><%= campground.title %></h3>
+            <p>
+              <%= campground.description.length > 120
+                ? campground.description.slice(0,120) + '...'
+                : campground.description %>
+            </p>
+
+            <div class="campground-meta">
+              <span><i class="fas fa-map-pin"></i> <%= campground.location %></span>
+              <strong>$<%= campground.price %>/night</strong>
+            </div>
+
+            <a href="/campgrounds/<%= campground._id %>" class="btn-view-details">
+              View Details
+            </a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<!-- Map Data -->
+<script>
+  const campgroundsGeoJSON = <%- campgroundsGeoJSON %>;
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="/javascripts/clusterMap.js"></script>

@@ -1,0 +1,35 @@
+<div class="review-form-section">
+    <h3 class="section-title">
+        <i class="fas fa-comment-medical"></i>
+        Leave a Review
+    </h3>
+    
+    <form action="/campgrounds/<%= campground._id %>/reviews" method="POST">
+        <div class="mb-4">
+            <textarea class="review-textarea" 
+                      name="review[body]" 
+                      placeholder="Share your experience at this campground... What did you like? What could be improved?"
+                      required></textarea>
+        </div>
+        
+        <div class="mb-4">
+            <label class="form-label fw-semibold mb-3 d-block">Your Rating</label>
+            <div class="star-rating">
+                <% for (let i = 5; i >= 1; i--) { %>
+                    <input type="radio" 
+                           id="star<%= i %>" 
+                           name="review[rating]" 
+                           value="<%= i %>" 
+                           <%= i === 5 ? 'checked' : '' %>>
+                    <label for="star<%= i %>" title="<%= i %> stars">
+                        <i class="fas fa-star"></i>
+                    </label>
+                <% } %>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn-submit-review">
+            <i class="fas fa-paper-plane"></i> Submit Review
+        </button>
+    </form>
+</div>

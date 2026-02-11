@@ -1,0 +1,7 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="container mt-5 text-center">
+    <h1 class="display-4"><%= err.statusCode || 500 %></h1>
+    <p class="lead"><%= err.message %></p>
+    <a href="/campgrounds" class="btn btn-primary mt-3">Go Home</a>
+</div>

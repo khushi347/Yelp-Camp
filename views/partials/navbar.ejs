@@ -1,0 +1,31 @@
+
+<header>
+    <div class="container">
+        <nav class="navbar">
+            <a href="/" class="logo">
+                <i class="fas fa-campground"></i>
+                YelpCamp
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="/">Home</a>
+                <a href="/campgrounds">Campgrounds</a>
+                <a href="#features">Features</a>
+                <a href="#testimonials">Testimonials</a>
+                <% if (!currentUser) { %>
+                    <a href="/login" class="btn btn-outline">Log In</a>
+                    <a href="/register" class="btn btn-primary">Sign Up</a>
+                <% } else { %>
+                    <span class="welcome-text">Welcome, <%= currentUser.username %>!</span>
+                    <a href="/campgrounds/new" class="btn btn-primary">Add Campground</a>
+                    <a href="/logout" class="btn btn-outline">Log Out</a>
+
+                <% } %>
+            </div>
+        </nav>
+    </div>
+</header>
